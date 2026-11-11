@@ -1,0 +1,57 @@
+
+#include <stdio.h>
+
+int main() {
+    int vet[10], positivos[10], negativos[10];
+    int qtdPositivos = 0, qtdNegativos = 0;
+    int aux;
+
+    for (int i = 0; i < 10; i++) {
+        printf("Digite um numero: ");
+        scanf("%d", &vet[i]);
+
+        if (vet[i] > 0 && vet[i] % 2 == 0) {
+            positivos[qtdPositivos] = vet[i];
+            qtdPositivos++;
+        }
+
+        if (vet[i] < 0 && vet[i] % 2 != 0) {
+            negativos[qtdNegativos] = vet[i];
+            qtdNegativos++;
+        }
+    }
+
+    for (int i = 0; i < qtdPositivos - 1; i++) {
+        for (int j = i + 1; j < qtdPositivos; j++) {
+            if (positivos[i] > positivos[j]) {
+                aux = positivos[i];
+                positivos[i] = positivos[j];
+                positivos[j] = aux;
+            }
+        }
+    }
+
+    for (int i = 0; i < qtdNegativos - 1; i++) {
+        for (int j = i + 1; j < qtdNegativos; j++) {
+            if (negativos[i] > negativos[j]) {
+                aux = negativos[i];
+                negativos[i] = negativos[j];
+                negativos[j] = aux;
+            }
+        }
+    }
+
+    printf("\nPositivos e pares:\n");
+    for (int i = 0; i < qtdPositivos; i++) {
+        printf("%d ", positivos[i]);
+    }
+
+    printf("\n\nNegativos e impares:\n");
+    for (int i = 0; i < qtdNegativos; i++) {
+        printf("%d ", negativos[i]);
+    }
+
+    printf("\n");
+
+    return 0;
+}
