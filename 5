@@ -1,0 +1,162 @@
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+long long fatorial(int n) {
+    long long fat = 1;
+
+    for (int i = 1; i <= n; i++) {
+        fat = fat * i;
+    }
+
+    return fat;
+}
+
+long long potencia(long long base, int expoente) {
+    long long resultado = 1;
+
+    for (int i = 0; i < expoente; i++) {
+        resultado = resultado * base;
+    }
+
+    return resultado;
+}
+
+float mediaPonderada(int vet[], int qtd) {
+    float soma = 0, pesos = 0;
+
+    for (int i = 0; i < qtd; i++) {
+        soma = soma + vet[i] * (i + 1);
+        pesos = pesos + (i + 1);
+    }
+
+    return soma / pesos;
+}
+
+int main() {
+    char nomes[4][50], auxNome[50];
+    char classificacao[4][30], auxClass[30];
+
+    int idade[4], qtd[4];
+    int valores[4][100], auxValores[100];
+
+    long long id[4], auxId;
+    float medias[4], auxMedia;
+
+    int lado1 = -1, lado2 = -1;
+    float diagonal = 0;
+
+    for (int i = 0; i < 4; i++) {
+        printf("\nNome: ");
+        scanf(" %49[^\n]", nomes[i]);
+
+        printf("Idade: ");
+        scanf("%d", &idade[i]);
+
+        id[i] = fatorial(idade[i] / 2);
+
+        printf("Quantidade de valores: ");
+        scanf("%d", &qtd[i]);
+
+        for (int j = 0; j < qtd[i]; j++) {
+            printf("Digite um valor: ");
+            scanf("%d", &valores[i][j]);
+        }
+
+        medias[i] = mediaPonderada(valores[i], qtd[i]);
+
+        int tentativa = 0;
+        int repetido = 1;
+
+        while (repetido == 1) {
+            id[i] = potencia(fatorial(idade[i] / 2), qtd[i] + tentativa) + tentativa;
+
+            repetido = 0;
+
+            for (int j = 0; j < i; j++) {
+                if (id[i] == id[j]) {
+                    repetido = 1;
+                    tentativa++;
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < qtd[i]; j++) {
+            if (valores[i][j] >= 0) {
+                if (lado1 == -1) {
+                    lado1 = valores[i][j];
+                } else if (lado2 == -1) {
+                    lado2 = valores[i][j];
+                }
+            }
+        }
+    }
+
+    if (lado1 != -1 && lado2 != -1) {
+        diagonal = sqrt(lado1 * lado1 + lado2 * lado2);
+
+        printf("\nDiagonal: %.2f\n", diagonal);
+    } else {
+        printf("\nNao foi possivel calcular a diagonal.\n");
+    }
+
+    for (int i = 0; i < 4; i++) {
+        if (lado1 == -1 || lado2 == -1) {
+            strcpy(classificacao[i], "Sem classificacao");
+        } else if (medias[i] > diagonal) {
+            strcpy(classificacao[i], "Acima da diagonal");
+        } else if (medias[i] < diagonal) {
+            strcpy(classificacao[i], "Abaixo da diagonal");
+        } else {
+            strcpy(classificacao[i], "Sobre a diagonal");
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 4; j++) {
+            if (strcmp(nomes[i], nomes[j]) > 0) {
+
+                strcpy(auxNome, nomes[i]);
+                strcpy(nomes[i], nomes[j]);
+                strcpy(nomes[j], auxNome);
+
+                auxId = id[i];
+                id[i] = id[j];
+                id[j] = auxId;
+
+                auxMedia = medias[i];
+                medias[i] = medias[j];
+                medias[j] = auxMedia;
+
+                strcpy(auxClass, classificacao[i]);
+                strcpy(classificacao[i], classificacao[j]);
+                strcpy(classificacao[j], auxClass);
+
+                auxId = idade[i];
+                idade[i] = idade[j];
+                idade[j] = auxId;
+
+                auxId = qtd[i];
+                qtd[i] = qtd[j];
+                qtd[j] = auxId;
+
+                for (int k = 0; k < qtd[i]; k++) {
+                    auxValores[k] = valores[i][k];
+                    valores[i][k] = valores[j][k];
+                    valores[j][k] = auxValores[k];
+                }
+            }
+        }
+    }
+
+    printf("\n========== CLASSIFICACAO FINAL ==========\n");
+
+    for (int i = 0; i < 4; i++) {
+        printf("%s ............ %s\n", nomes[i], classificacao[i]);
+    }
+
+    return 0;
+}
