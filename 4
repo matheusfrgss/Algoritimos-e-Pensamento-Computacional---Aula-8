@@ -1,0 +1,114 @@
+
+#include <stdio.h>
+#include <string.h>
+
+long long fibonacci(int n) {
+    long long a = 0, b = 1, soma = 0, aux;
+
+    for (int i = 0; i < n; i++) {
+        soma = soma + a;
+        aux = a + b;
+        a = b;
+        b = aux;
+    }
+
+    return soma;
+}
+
+int primo(long long n) {
+    if (n < 2) {
+        return 0;
+    }
+
+    for (int i = 2; i < n; i++) {
+        if (n % i == 0) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+int main() {
+    char nomes[5][50];
+    long long resultados[5];
+    int numeros[5];
+    int premiado[5] = {0};
+    int primeiro = -1, segundo = -1, terceiro = -1;
+    long long maior;
+    double media = 0;
+
+    for (int i = 0; i < 5; i++) {
+        printf("Nome do apostador: ");
+        scanf(" %49[^\n]", nomes[i]);
+
+        printf("Digite um numero positivo: ");
+        scanf("%d", &numeros[i]);
+
+        resultados[i] = fibonacci(numeros[i]);
+        media = media + resultados[i];
+    }
+
+    media = media / 5;
+
+    maior = -1;
+
+    for (int i = 0; i < 5; i++) {
+        if (primo(resultados[i]) == 1 && resultados[i] > maior) {
+            maior = resultados[i];
+            primeiro = i;
+        }
+    }
+
+    if (primeiro != -1) {
+        premiado[primeiro] = 1;
+    }
+
+    maior = -1;
+
+    for (int i = 0; i < 5; i++) {
+        if (premiado[i] == 0 && resultados[i] % 2 == 0) {
+            if (resultados[i] > maior) {
+                maior = resultados[i];
+                segundo = i;
+            }
+        }
+    }
+
+    if (segundo != -1) {
+        premiado[segundo] = 1;
+    }
+
+    maior = -1;
+
+    for (int i = 0; i < 5; i++) {
+        if (premiado[i] == 0 && resultados[i] > media) {
+            if (resultados[i] > maior) {
+                maior = resultados[i];
+                terceiro = i;
+            }
+        }
+    }
+
+    printf("\n");
+
+    if (primeiro != -1) {
+        printf("1 lugar: %s\n", nomes[primeiro]);
+    } else {
+        printf("1 lugar: Sem vencedor\n");
+    }
+
+    if (segundo != -1) {
+        printf("2 lugar: %s\n", nomes[segundo]);
+    } else {
+        printf("2 lugar: Sem vencedor\n");
+    }
+
+    if (terceiro != -1) {
+        printf("3 lugar: %s\n", nomes[terceiro]);
+    } else {
+        printf("3 lugar: Sem vencedor\n");
+    }
+
+    return 0;
+}
